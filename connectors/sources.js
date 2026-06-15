@@ -37,7 +37,7 @@ export const SOURCE_CONFIGS = [
     name: 'ไทยฟลาย',
     listUrls: ['https://thaifly.com/service/hot-deal'],
     linkRe: '(https?://(?:www\\.)?thaifly\\.com/tour/[A-Za-z0-9-]+|/tour/[A-Za-z0-9-]+)',
-    idRe: /tour\/([A-Za-z0-9-]+)/,
+    idRe: /(\d{3,})/,
     imageRe: /https?:\/\/[^"'\s)]*thaifly\.com\/[^"'\s)]+\.(?:jpg|jpeg|png|webp)/i,
   },
   {
@@ -45,7 +45,7 @@ export const SOURCE_CONFIGS = [
     name: 'มัชรูมทราเวล',
     listUrls: ['https://www.mushroomtravel.com/tour/promotion'],
     linkRe: '(https?://(?:www\\.)?mushroomtravel\\.com/tour/[A-Za-z0-9-]+|/tour/[A-Za-z0-9-]+)',
-    idRe: /tour\/([A-Za-z0-9-]+)/,
+    idRe: /(\d{3,})/,
     imageRe: /https?:\/\/[^"'\s)]*mushroomtravel\.com\/[^"'\s)]+\.(?:jpg|jpeg|png|webp)/i,
   },
   {
@@ -53,7 +53,7 @@ export const SOURCE_CONFIGS = [
     name: 'ไทยทราเวลเซ็นเตอร์',
     listUrls: ['https://www.thaitravelcenter.com/tour/discounted/'],
     linkRe: '(https?://(?:www\\.)?thaitravelcenter\\.com/[a-z]{2}/tour-program/[A-Za-z0-9-]+|/tour-program/[A-Za-z0-9-]+)',
-    idRe: /([A-Za-z0-9]+)\/?$/,
+    idRe: /(\d{3,})/,
     imageRe: /https?:\/\/[^"'\s)]*thaitravelcenter\.com\/[^"'\s)]+\.(?:jpg|jpeg|png|webp)/i,
   },
   {
@@ -61,7 +61,7 @@ export const SOURCE_CONFIGS = [
     name: 'เบสท์ทัวร์ฮอลิเดย์',
     listUrls: ['https://www.besttourholidays.com/promotion/hot-deal'],
     linkRe: '(https?://(?:www\\.)?besttourholidays\\.com/tour/[A-Za-z0-9-]+|/tour/[A-Za-z0-9-]+)',
-    idRe: /tour\/([A-Za-z0-9-]+)/,
+    idRe: /(\d{3,})/,
     imageRe: /https?:\/\/[^"'\s)]*besttourholidays\.com\/[^"'\s)]+\.(?:jpg|jpeg|png|webp)/i,
   },
 ];

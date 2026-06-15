@@ -78,7 +78,16 @@ function parseCard(block) {
   const durationDays = durMatch ? parseInt(durMatch[1], 10) : null;
 
   const countryMatch = text.match(/ทัวร์(จีน|เกาหลี|ญี่ปุ่น|เวียดนาม|ไต้หวัน|ฮ่องกง|มาเก๊า|สิงคโปร์|มาเลเซีย|ลาว|พม่า|กัมพูชา)/);
-  const country = countryMatch ? countryMatch[1] : null;
+  let country = countryMatch ? countryMatch[1] : null;
+  if (!country) {
+    // Fall back to the English country keyword in the tour URL slug
+    // e.g. /tours/23500-china-several-cities-in-chongqing-4d3n-3u.html
+    const u = href.toLowerCase();
+    const urlMap = { china: 'จีน', korea: 'เกาหลี', japan: 'ญี่ปุ่น', vietnam: 'เวียดนาม', taiwan: 'ไต้หวัน', 'hong-kong': 'ฮ่องกง', hongkong: 'ฮ่องกง' };
+    for (const k of Object.keys(urlMap)) {
+      if (u.includes(k)) { country = urlMap[k]; break; }
+    }
+  }
 
   const imgMatch = html.match(/https?:\/\/cdn\.tourkrub\.co\/tours\/[^"'\s)]+/);
   const image = imgMatch ? imgMatch[0] : null;
