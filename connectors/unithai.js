@@ -1,31 +1,39 @@
-// Connector: Unithai Travel (unithaitravel.com) — "ทัวร์ไฟไหม้".
+// Connector: Unithai Travel (unithaitravel.com) — ทัวร์ไฟไหม้.
 //
-// Starter/best-effort connector. Unithai renders deal cards on
-//   https://www.unithaitravel.com/th/trip_profiremai.php
-// Image URLs follow the pattern https://www.unithaitravel.com/__files/t/ch/<code>-*.jpg
-//
-// This parser is intentionally conservative: if the page markup doesn't match,
-// it returns [] so the aggregator falls back to cached / sample data rather
-// than emitting garbage. Flesh out the regexes once you confirm the live DOM.
+// Observed list markup (after tag-strip), one card each:
+//   รหัส 50170: <a href="…trip_detail2.php?route_id=50170">CODE : <title> BY VZ</a>
+//   ~~16,888~~ **10,888**     (original, then sale — both comma-formatted)
+// Country isn't printed, so we infer it from city/keywords in the title.
 
-const LIST_URL = 'https://www.unithaitravel.com/th/trip_profiremai.php';
-const UA =
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 ' +
-  '(KHTML, like Gecko) Chrome/124.0 Safari/537.36';
+import { getHtml } from '../lib/scrape.js';
+import { detectCountry } from '../lib/normalize.js';
 
-function parseCards(html) {
+const BASE = 'https://www.unithaitravel.com';
+const LIST_URLS = ['https://www.unithaitravel.com/th/trip_profiremai.php'];
+
+function parse(html) {
   const out = [];
-  // Each product image encodes the tour code: __files/t/ch/<code>-XXXX.jpg
-  const re = /__files\/t\/[a-z]{2}\/(\d+)-[^"'\s]+\.(?:jpg|jpeg|png|webp)/gi;
-  const seen = new Set();
+  const re = /trip_detail2?\.php\?route_id=(\d+)/g;
+  const hits = [];
   let m;
-  while ((m = re.exec(html)) !== null) {
-    const code = m[1];
-    if (seen.has(code)) continue;
-    seen.add(code);
-    const around = html.slice(Math.max(0, m.index - 1500), m.index + 1500);
+  while ((m = re.exec(html)) !== null) hits.push({ id: m[1], at: m.index });
+  const firsts = [];
+  const seen = new Set();
+  for (const h of hits) {
+    if (seen.has(h.id)) continue;
+    seen.add(h.id);
+    firsts.push(h);
+  }
+  for (let i = 0; i < firsts.length; i++) {
+    const id = firsts[i].id;
+    // forward-only: title is the anchor's inner text (after the href), prices follow
+    const start = firsts[i].at;
+    const end = i + 1 < firsts.length ? firsts[i + 1].at : Math.min(firsts[i].at + 1000, html.length);
+    const chunk = html.slice(start, end);
+    const text = chunk.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 
-    const nums = [...around.matchAll(/([0-9]{1,3}(?:,[0-9]{3})+)/g)]
+    // comma-formatted prices only → avoids the tour code digits
+    const nums = [...text.matchAll(/([0-9]{1,3}(?:,[0-9]{3})+)/g)]
       .map((x) => parseInt(x[1].replace(/,/g, ''), 10))
       .filter((n) => n >= 3000 && n <= 300000);
     let priceOriginal = null;
@@ -36,16 +44,28 @@ function parseCards(html) {
     } else if (nums.length === 1) {
       priceSale = nums[0];
     }
+    if (!priceSale) continue;
 
-    const durMatch = around.match(/(\d+)\s*วัน\s*(\d+)\s*คืน/);
-    const countryMatch = around.match(/ทัวร์(จีน|เกาหลี|ญี่ปุ่น|เวียดนาม|ไต้หวัน|ฮ่องกง|มาเก๊า)/);
+    // title: between the tour code "XXX :" and "BY <airline>" (fallbacks below)
+    let title = '';
+    const tm = text.match(/[:：]\s*([^:：]{6,90}?)\s*BY\s/i);
+    if (tm) title = tm[1].replace(/\s+/g, ' ').trim();
+    if (!title || title.length < 6) {
+      const t2 = text.match(/รหัส\s*\d+\s*[:：]?\s*([^~|]{6,80})/);
+      title = t2 ? t2[1].replace(/\s+/g, ' ').trim() : `ทัวร์ ${id}`;
+    }
+
+    const country = detectCountry(title) || detectCountry(text);
+
+    const durMatch = text.match(/(\d+)\s*วัน\s*(\d+)\s*คืน/);
+    const img = chunk.match(/https?:\/\/[^"'\s)]*unithaitravel\.com\/__files\/[^"'\s)]+/);
 
     out.push({
-      id: `unithai-${code}`,
+      id: `unithai-${id}`,
       source: 'unithai',
       sourceName: 'ยูนิไทย',
-      title: `ทัวร์${countryMatch ? countryMatch[1] : ''} ${code}`.trim(),
-      country: countryMatch ? countryMatch[1] : null,
+      title,
+      country,
       city: null,
       airline: null,
       durationDays: durMatch ? parseInt(durMatch[1], 10) : null,
@@ -54,8 +74,8 @@ function parseCards(html) {
       priceOriginal,
       priceSale,
       discountPct: 0,
-      image: `https://www.unithaitravel.com/${m[0]}`,
-      url: `https://www.unithaitravel.com/th/trip_detail.php?id=${code}`,
+      image: img ? img[0] : null,
+      url: `${BASE}/th/trip_detail2.php?route_id=${id}`,
       currency: 'THB',
     });
   }
@@ -63,15 +83,13 @@ function parseCards(html) {
 }
 
 export async function fetchUnithai({ fetchImpl = fetch } = {}) {
-  let res;
-  try {
-    res = await fetchImpl(LIST_URL, { headers: { 'User-Agent': UA } });
-  } catch (e) {
-    return [];
+  const out = [];
+  for (const url of LIST_URLS) {
+    const html = await getHtml(url, fetchImpl);
+    if (!html) continue;
+    out.push(...parse(html));
   }
-  if (!res || !res.ok) return [];
-  const html = await res.text();
-  return parseCards(html);
+  return out;
 }
 
 export default { id: 'unithai', name: 'ยูนิไทย', fetch: fetchUnithai };

@@ -4,11 +4,12 @@
 
 import tourkrub from './tourkrub.js';
 import unithai from './unithai.js';
+import travelzeed from './travelzeed.js';
 import { GENERIC_CONNECTORS } from './sources.js';
 import { cleanDeals, flagFor } from '../lib/normalize.js';
 
-// tourkrub + unithai are hand-written; the rest are config-driven scaffolds.
-export const CONNECTORS = [tourkrub, unithai, ...GENERIC_CONNECTORS];
+// Hand-written parsers + remaining config-driven scaffolds.
+export const CONNECTORS = [tourkrub, unithai, travelzeed, ...GENERIC_CONNECTORS];
 
 // Fetch every source in parallel. A failing source contributes [] instead of
 // blowing up the whole refresh.

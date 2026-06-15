@@ -25,14 +25,6 @@ export const SOURCE_CONFIGS = [
     makeUrl: (href) => href,
   },
   {
-    id: 'travelzeed',
-    name: 'ทราเวลซี้ด',
-    listUrls: ['https://www.travelzeed.com/fire'],
-    linkRe: '(https?://(?:www\\.)?travelzeed\\.com/[a-z0-9-]*tour[a-z0-9-]*/?\\d+|/tour/[A-Za-z0-9-]+)',
-    idRe: /(\d{3,})/,
-    imageRe: /https?:\/\/[^"'\s)]*travelzeed\.com\/[^"'\s)]+\.(?:jpg|jpeg|png|webp)/i,
-  },
-  {
     id: 'thaifly',
     name: 'ไทยฟลาย',
     listUrls: ['https://thaifly.com/service/hot-deal'],
