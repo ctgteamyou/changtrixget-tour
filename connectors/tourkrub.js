@@ -70,6 +70,10 @@ function parseCard(block) {
   const imgMatch = html.match(/https?:\/\/cdn\.tourkrub\.co\/tours\/[^"'\s)]+/);
   const image = imgMatch ? imgMatch[0] : null;
 
+  // Tourkrub prints the discount explicitly, e.g. "ลดสูงสุด41%"
+  const discMatch = html.match(/ลด(?:สูงสุด)?\s*(\d{1,2})\s*%/);
+  const discountPct = discMatch ? parseInt(discMatch[1], 10) : 0;
+
   const titleMatch = html.match(/รหัส\s*\d+[^<]*?\d+\s*คืน\s*([^<]+?)\s*\d*\s*บิน/);
   const title = titleMatch ? titleMatch[1].trim() : `ทัวร์${country || ''} ${id}`;
 
@@ -86,7 +90,7 @@ function parseCard(block) {
     returnDate: null,
     priceOriginal,
     priceSale,
-    discountPct: 0,
+    discountPct,
     image,
     url: BASE + href,
     currency: 'THB',
