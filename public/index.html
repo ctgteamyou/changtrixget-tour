@@ -212,15 +212,23 @@ const CITY_COORDS = {
   "ฮ่องกง":[22.319,114.169],"มาเก๊า":[22.199,113.544],"สิงคโปร์":[1.352,103.820]
 };
 const FLAG = {"จีน":"🇨🇳","เกาหลี":"🇰🇷","ญี่ปุ่น":"🇯🇵","เวียดนาม":"🇻🇳","ไต้หวัน":"🇹🇼","ฮ่องกง":"🇭🇰","มาเก๊า":"🇲🇴","สิงคโปร์":"🇸🇬","มาเลเซีย":"🇲🇾","ลาว":"🇱🇦","พม่า":"🇲🇲"};
-// Scenic search tags for place photos (city + a "view" tag, matched as BOTH)
-// so the fallback is always scenery / a landmark — never random people/food.
-const CITY_EN = {"ฉงชิ่ง":"chongqing,skyline","เฉิงตู":"chengdu,panda","อู่หลง":"wulong,mountain","เซี่ยงไฮ้":"shanghai,skyline","ปักกิ่ง":"beijing,greatwall","จางเจียเจี้ย":"zhangjiajie,mountain","ชิงเต่า":"qingdao,seaside","คุนหมิง":"kunming,nature","ต้าหลี่":"dali,lake","ลี่เจียง":"lijiang,oldtown","กวางเจา":"guangzhou,skyline","จูไห่":"zhuhai,seaside","หางโจว":"hangzhou,lake","มองโกเลียใน":"mongolia,grassland","เออร์ดอส":"mongolia,grassland","หยีชาง":"yichang,river","อี๋ชาง":"yichang,river","ซีอาน":"xian,landmark","โซล":"seoul,palace","ปูซาน":"busan,seaside","เชจู":"jeju,island","โตเกียว":"tokyo,skyline","โอซาก้า":"osaka,castle","ฮอกไกโด":"hokkaido,landscape","ฟุกุโอกะ":"fukuoka,temple","ดานัง":"danang,beach","ฮอยอัน":"hoian,oldtown","ฟูก๊วก":"phuquoc,beach","ฮานอย":"hanoi,landmark","ญาจาง":"nhatrang,beach","ไทเป":"taipei,skyline","เกาสง":"kaohsiung,harbor","ฮ่องกง":"hongkong,skyline","มาเก๊า":"macau,landmark","สิงคโปร์":"singapore,skyline"};
-const COUNTRY_EN = {"จีน":"china,landmark","เกาหลี":"korea,palace","ญี่ปุ่น":"japan,landmark","เวียดนาม":"vietnam,landscape","ไต้หวัน":"taiwan,landmark","ฮ่องกง":"hongkong,skyline"};
-function placeImg(d){
-  const term = (CITY_EN[d.city] || COUNTRY_EN[d.country] || "asia,landmark").replace(/\s+/g,",");
-  let h=0; const s=String(d.id||term); for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0;
-  // /all = photo must match BOTH tags → guarantees a scenic / landmark shot
-  return `https://loremflickr.com/600/380/${term}/all?lock=${h%900+1}`;
+// Fallback photos = Wikipedia lead image of the city / a national landmark.
+// These are curated colour scenery / landmark shots (no random people/food).
+const CITY_WIKI = {"ฉงชิ่ง":"Chongqing","เฉิงตู":"Chengdu","อู่หลง":"Wulong District, Chongqing","เซี่ยงไฮ้":"Shanghai","ปักกิ่ง":"Beijing","จางเจียเจี้ย":"Tianmen Mountain","ชิงเต่า":"Qingdao","คุนหมิง":"Kunming","ต้าหลี่":"Dali, Yunnan","ลี่เจียง":"Lijiang","กวางเจา":"Guangzhou","จูไห่":"Zhuhai","หางโจว":"West Lake","มองโกเลียใน":"Hohhot","เออร์ดอส":"Ordos City","หยีชาง":"Yichang","อี๋ชาง":"Yichang","ซีอาน":"Terracotta Army","โซล":"Gyeongbokgung","ปูซาน":"Busan","เชจู":"Jeju Island","โตเกียว":"Tokyo","โอซาก้า":"Osaka Castle","ฮอกไกโด":"Hokkaido","ฟุกุโอกะ":"Fukuoka","ดานัง":"Da Nang","ฮอยอัน":"Hoi An","ฟูก๊วก":"Phu Quoc","ฮานอย":"Hanoi","ญาจาง":"Nha Trang","ไทเป":"Taipei 101","เกาสง":"Kaohsiung","ฮ่องกง":"Hong Kong","มาเก๊า":"Macau","สิงคโปร์":"Marina Bay Sands"};
+const COUNTRY_WIKI = {"จีน":"Great Wall of China","เกาหลี":"Gyeongbokgung","ญี่ปุ่น":"Mount Fuji","เวียดนาม":"Ha Long Bay","ไต้หวัน":"Taipei 101","ฮ่องกง":"Hong Kong"};
+const wikiCache = {};
+function wikiImg(title){
+  if(title in wikiCache) return Promise.resolve(wikiCache[title]);
+  return fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`)
+    .then(r=>r.json()).then(j=>{ let s=(j.thumbnail&&j.thumbnail.source)||null; if(s)s=s.replace(/\/\d+px-/,'/800px-'); wikiCache[title]=s; return s; })
+    .catch(()=>{ wikiCache[title]=null; return null; });
+}
+function placeTitle(d){ return CITY_WIKI[d.city] || COUNTRY_WIKI[d.country] || null; }
+function resolvePlaceImgs(root){
+  root.querySelectorAll('img[data-wiki]').forEach(img=>{
+    const t=img.getAttribute('data-wiki'); if(!t) return;
+    wikiImg(t).then(url=>{ if(!url) return; img.onload=()=>{ const ph=img.nextElementSibling; if(ph&&ph.classList.contains('ph')) ph.style.display='none'; }; img.src=url; });
+  });
 }
 const baht = n => n==null ? "—" : "฿"+n.toLocaleString("en-US");
 const TODAY = new Date(); TODAY.setHours(0,0,0,0);
@@ -368,8 +376,10 @@ function cardEl(d){
   const depTxt = du==null?"":(du<=0?"ออกวันนี้":du===1?"ออกพรุ่งนี้":`ออกใน ${du} วัน`);
   el.innerHTML=`
     <a class="thumb" href="${d.url}" target="_blank" rel="noopener">
-      <img loading="lazy" src="${d.image||placeImg(d)}" alt="${d.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
-      <div class="ph" style="display:none">${FLAG[d.country]||"🧳"}</div>
+      ${d.image
+        ? `<img loading="lazy" src="${d.image}" alt="${d.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">`
+        : `<img loading="lazy" data-wiki="${placeTitle(d)||''}" alt="${d.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">`}
+      <div class="ph" style="display:${d.image?'none':'grid'}">${FLAG[d.country]||"🧳"}</div>
       ${d.discountPct?`<span class="badge">ลด ${d.discountPct}%</span>`:""}
       <span class="srcbadge">${d.sourceName}</span>
     </a>
@@ -392,7 +402,7 @@ function renderList(list){
   if(!list.length){ c.innerHTML='<div class="empty">😶 ไม่พบดีลที่ตรงกับตัวกรอง ลองล้างตัวกรองดูนะ</div>'; return; }
   const grid=document.createElement("div"); grid.className="grid";
   list.slice(0,state.shown).forEach(d=>grid.appendChild(cardEl(d)));
-  c.innerHTML=""; c.appendChild(grid);
+  c.innerHTML=""; c.appendChild(grid); resolvePlaceImgs(grid);
   if(list.length>state.shown){ const b=document.createElement("button"); b.className="loadmore"; b.textContent=`โหลดเพิ่ม (${list.length-state.shown} ดีล)`; b.onclick=()=>{state.shown+=24;renderList(list);}; c.appendChild(b); }
 }
 
