@@ -98,6 +98,14 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === '/api/health') {
     return sendJSON(res, 200, { ok: true, mode: cache.mode, count: cache.deals.length });
   }
+  if (url.pathname === '/api/sources') {
+    // compact per-source diagnostics (counts + one sample), no full deal list
+    const sources = {};
+    for (const [k, v] of Object.entries(cache.perSource || {})) {
+      sources[k] = { name: v.name, count: v.count, ok: v.ok, sample: (v.sample || [])[0] || null };
+    }
+    return sendJSON(res, 200, { mode: cache.mode, fetchedAt: cache.fetchedAt, total: cache.deals.length, sources });
+  }
   return serveStatic(res, url.pathname);
 });
 
