@@ -50,7 +50,13 @@ async function refresh() {
           Object.fromEntries(Object.entries(live.perSource).map(([k, v]) => [k, v.count])));
         return;
       }
-      console.warn('[refresh] live fetch returned 0 deals, using sample');
+      // Live fetch produced nothing — serve sample data but KEEP the per-source
+      // diagnostics so /api/deals can show why each connector returned 0.
+      const sample = await loadSample();
+      cache = { ...sample, mode: 'sample', perSource: live.perSource, liveTried: true };
+      console.warn('[refresh] live fetch returned 0 deals, using sample. per-source:',
+        JSON.stringify(live.perSource));
+      return;
     } catch (e) {
       console.warn('[refresh] live fetch failed, using sample:', e.message);
     }
