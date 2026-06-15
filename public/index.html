@@ -212,13 +212,15 @@ const CITY_COORDS = {
   "ฮ่องกง":[22.319,114.169],"มาเก๊า":[22.199,113.544],"สิงคโปร์":[1.352,103.820]
 };
 const FLAG = {"จีน":"🇨🇳","เกาหลี":"🇰🇷","ญี่ปุ่น":"🇯🇵","เวียดนาม":"🇻🇳","ไต้หวัน":"🇹🇼","ฮ่องกง":"🇭🇰","มาเก๊า":"🇲🇴","สิงคโปร์":"🇸🇬","มาเลเซีย":"🇲🇾","ลาว":"🇱🇦","พม่า":"🇲🇲"};
-// English search terms for place photos (used when a deal has no preview image)
-const CITY_EN = {"ฉงชิ่ง":"chongqing","เฉิงตู":"chengdu","อู่หลง":"wulong","เซี่ยงไฮ้":"shanghai","ปักกิ่ง":"beijing","จางเจียเจี้ย":"zhangjiajie","ชิงเต่า":"qingdao","คุนหมิง":"kunming","ต้าหลี่":"dali china","ลี่เจียง":"lijiang","กวางเจา":"guangzhou","จูไห่":"zhuhai","หางโจว":"hangzhou","มองโกเลียใน":"inner mongolia","เออร์ดอส":"ordos","หยีชาง":"yichang","อี๋ชาง":"yichang","ซีอาน":"xian","โซล":"seoul","ปูซาน":"busan","เชจู":"jeju","โตเกียว":"tokyo","โอซาก้า":"osaka","ฮอกไกโด":"hokkaido","ฟุกุโอกะ":"fukuoka","ดานัง":"da nang","ฮอยอัน":"hoi an","ฟูก๊วก":"phu quoc","ฮานอย":"hanoi","ญาจาง":"nha trang","ไทเป":"taipei","เกาสง":"kaohsiung","ฮ่องกง":"hong kong","มาเก๊า":"macau","สิงคโปร์":"singapore"};
-const COUNTRY_EN = {"จีน":"china","เกาหลี":"south korea","ญี่ปุ่น":"japan","เวียดนาม":"vietnam","ไต้หวัน":"taiwan","ฮ่องกง":"hong kong"};
+// Scenic search tags for place photos (city + a "view" tag, matched as BOTH)
+// so the fallback is always scenery / a landmark — never random people/food.
+const CITY_EN = {"ฉงชิ่ง":"chongqing,skyline","เฉิงตู":"chengdu,panda","อู่หลง":"wulong,mountain","เซี่ยงไฮ้":"shanghai,skyline","ปักกิ่ง":"beijing,greatwall","จางเจียเจี้ย":"zhangjiajie,mountain","ชิงเต่า":"qingdao,seaside","คุนหมิง":"kunming,nature","ต้าหลี่":"dali,lake","ลี่เจียง":"lijiang,oldtown","กวางเจา":"guangzhou,skyline","จูไห่":"zhuhai,seaside","หางโจว":"hangzhou,lake","มองโกเลียใน":"mongolia,grassland","เออร์ดอส":"mongolia,grassland","หยีชาง":"yichang,river","อี๋ชาง":"yichang,river","ซีอาน":"xian,landmark","โซล":"seoul,palace","ปูซาน":"busan,seaside","เชจู":"jeju,island","โตเกียว":"tokyo,skyline","โอซาก้า":"osaka,castle","ฮอกไกโด":"hokkaido,landscape","ฟุกุโอกะ":"fukuoka,temple","ดานัง":"danang,beach","ฮอยอัน":"hoian,oldtown","ฟูก๊วก":"phuquoc,beach","ฮานอย":"hanoi,landmark","ญาจาง":"nhatrang,beach","ไทเป":"taipei,skyline","เกาสง":"kaohsiung,harbor","ฮ่องกง":"hongkong,skyline","มาเก๊า":"macau,landmark","สิงคโปร์":"singapore,skyline"};
+const COUNTRY_EN = {"จีน":"china,landmark","เกาหลี":"korea,palace","ญี่ปุ่น":"japan,landmark","เวียดนาม":"vietnam,landscape","ไต้หวัน":"taiwan,landmark","ฮ่องกง":"hongkong,skyline"};
 function placeImg(d){
-  const term = (CITY_EN[d.city] || COUNTRY_EN[d.country] || "asia travel").replace(/\s+/g,",");
+  const term = (CITY_EN[d.city] || COUNTRY_EN[d.country] || "asia,landmark").replace(/\s+/g,",");
   let h=0; const s=String(d.id||term); for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0;
-  return `https://loremflickr.com/600/380/${term}?lock=${h%900+1}`;
+  // /all = photo must match BOTH tags → guarantees a scenic / landmark shot
+  return `https://loremflickr.com/600/380/${term}/all?lock=${h%900+1}`;
 }
 const baht = n => n==null ? "—" : "฿"+n.toLocaleString("en-US");
 const TODAY = new Date(); TODAY.setHours(0,0,0,0);
