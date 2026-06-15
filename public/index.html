@@ -220,7 +220,13 @@ const wikiCache = {};
 function wikiImg(title){
   if(title in wikiCache) return Promise.resolve(wikiCache[title]);
   return fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`)
-    .then(r=>r.json()).then(j=>{ let s=(j.thumbnail&&j.thumbnail.source)||null; if(s)s=s.replace(/\/\d+px-/,'/800px-'); wikiCache[title]=s; return s; })
+    .then(r=>r.json()).then(j=>{
+      // Wikimedia's /thumb/ host blocks hotlinking, but the original loads —
+      // route it through the Photon CDN (i0.wp.com) to resize to 800px.
+      let s=(j.originalimage&&j.originalimage.source)||(j.thumbnail&&j.thumbnail.source)||null;
+      if(s) s=`https://i0.wp.com/${s.replace(/^https?:\/\//,'')}?w=800`;
+      wikiCache[title]=s; return s;
+    })
     .catch(()=>{ wikiCache[title]=null; return null; });
 }
 function placeTitle(d){ return CITY_WIKI[d.city] || COUNTRY_WIKI[d.country] || null; }
