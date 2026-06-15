@@ -25,7 +25,8 @@ export async function fetchAll(opts = {}) {
     const c = CONNECTORS[i];
     if (results[i].status === 'fulfilled') {
       const { deals } = results[i].value;
-      perSource[c.id] = { name: c.name, count: deals.length, ok: true };
+      // keep a couple of raw (pre-clean) samples for debugging via /api/deals
+      perSource[c.id] = { name: c.name, count: deals.length, ok: true, sample: deals.slice(0, 2) };
       all = all.concat(deals);
     } else {
       perSource[c.id] = { name: c.name, count: 0, ok: false, error: String(results[i].reason) };
