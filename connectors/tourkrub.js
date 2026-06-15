@@ -24,19 +24,27 @@ function countryFromLabel(label = '') {
 
 // Pull every <a href="/tours/....html"> ... </a> card block.
 function splitCards(html) {
-  const blocks = [];
   const re = /href="(\/tours\/[^"]+\.html)"/g;
   let m;
   const indices = [];
   while ((m = re.exec(html)) !== null) indices.push({ href: m[1], at: m.index });
-  // group by unique href, take the slice of html around the first occurrence
+  // Each card links to the same tour several times (image, title, button).
+  // Take only the FIRST occurrence of each distinct href, and slice from there
+  // to the first occurrence of the NEXT distinct card — so the slice contains
+  // the whole card (price, country, duration), not just the gap between two
+  // links of the same card.
+  const firsts = [];
   const seen = new Set();
-  for (let i = 0; i < indices.length; i++) {
-    const { href, at } = indices[i];
-    if (seen.has(href)) continue;
-    seen.add(href);
-    const end = i + 1 < indices.length ? indices[i + 1].at : Math.min(at + 4000, html.length);
-    blocks.push({ href, html: html.slice(at, end) });
+  for (const it of indices) {
+    if (seen.has(it.href)) continue;
+    seen.add(it.href);
+    firsts.push(it);
+  }
+  const blocks = [];
+  for (let i = 0; i < firsts.length; i++) {
+    const start = firsts[i].at;
+    const end = i + 1 < firsts.length ? firsts[i + 1].at : Math.min(start + 4000, html.length);
+    blocks.push({ href: firsts[i].href, html: html.slice(start, end) });
   }
   return blocks;
 }
@@ -47,35 +55,42 @@ function parseCard(block) {
   if (!idMatch) return null;
   const id = idMatch[1];
 
-  // prices appear as "16,990 ... เริ่มต้น 9,990"
-  const nums = [...html.matchAll(/([0-9]{1,3}(?:,[0-9]{3})+|[0-9]{4,6})/g)].map((x) =>
-    parseInt(x[1].replace(/,/g, ''), 10),
-  );
-  const priceCandidates = nums.filter((n) => n >= 3000 && n <= 300000);
+  // Strip HTML tags first so URLs / tour codes (which contain digits) don't
+  // get mistaken for prices. Read prices, duration, country from text only.
+  const text = html.replace(/<[^>]+>/g, ' ');
+
+  // Tourkrub always shows prices comma-formatted, e.g. "16,990 ... เริ่มต้น 9,990".
+  // Only accept comma-formatted numbers — avoids picking up tour-code digits.
+  const nums = [...text.matchAll(/([0-9]{1,3}(?:,[0-9]{3})+)/g)]
+    .map((x) => parseInt(x[1].replace(/,/g, ''), 10))
+    .filter((n) => n >= 3000 && n <= 300000);
   let priceOriginal = null;
   let priceSale = null;
-  if (priceCandidates.length >= 2) {
-    priceOriginal = Math.max(priceCandidates[0], priceCandidates[1]);
-    priceSale = Math.min(priceCandidates[0], priceCandidates[1]);
-  } else if (priceCandidates.length === 1) {
-    priceSale = priceCandidates[0];
+  if (nums.length >= 2) {
+    priceOriginal = Math.max(nums[0], nums[1]);
+    priceSale = Math.min(nums[0], nums[1]);
+  } else if (nums.length === 1) {
+    priceSale = nums[0];
   }
+  if (!priceSale) return null; // skip cards we couldn't read a price from
 
-  const durMatch = html.match(/(\d+)\s*วัน\s*(\d+)\s*คืน/);
+  const durMatch = text.match(/(\d+)\s*วัน\s*(\d+)\s*คืน/);
   const durationDays = durMatch ? parseInt(durMatch[1], 10) : null;
 
-  const countryMatch = html.match(/ทัวร์(จีน|เกาหลี|ญี่ปุ่น|เวียดนาม|ไต้หวัน|ฮ่องกง|มาเก๊า|สิงคโปร์|มาเลเซีย|ลาว|พม่า|กัมพูชา)/);
+  const countryMatch = text.match(/ทัวร์(จีน|เกาหลี|ญี่ปุ่น|เวียดนาม|ไต้หวัน|ฮ่องกง|มาเก๊า|สิงคโปร์|มาเลเซีย|ลาว|พม่า|กัมพูชา)/);
   const country = countryMatch ? countryMatch[1] : null;
 
   const imgMatch = html.match(/https?:\/\/cdn\.tourkrub\.co\/tours\/[^"'\s)]+/);
   const image = imgMatch ? imgMatch[0] : null;
 
   // Tourkrub prints the discount explicitly, e.g. "ลดสูงสุด41%"
-  const discMatch = html.match(/ลด(?:สูงสุด)?\s*(\d{1,2})\s*%/);
+  const discMatch = text.match(/ลด(?:สูงสุด)?\s*(\d{1,2})\s*%/);
   const discountPct = discMatch ? parseInt(discMatch[1], 10) : 0;
 
-  const titleMatch = html.match(/รหัส\s*\d+[^<]*?\d+\s*คืน\s*([^<]+?)\s*\d*\s*บิน/);
-  const title = titleMatch ? titleMatch[1].trim() : `ทัวร์${country || ''} ${id}`;
+  // Title: the descriptive text between "…คืน" and "บิน <airline>"
+  const titleMatch = text.match(/คืน\s+([^\d][^|]{6,90}?)\s*\d*\s*บิน/);
+  let title = titleMatch ? titleMatch[1].replace(/\s+/g, ' ').trim() : '';
+  if (!title || title.length < 6) title = `ทัวร์${country || ''} ${id}`;
 
   return {
     id: `tourkrub-${id}`,
