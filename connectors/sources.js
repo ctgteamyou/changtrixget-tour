@@ -25,22 +25,6 @@ export const SOURCE_CONFIGS = [
     makeUrl: (href) => href,
   },
   {
-    id: 'thaifly',
-    name: 'ไทยฟลาย',
-    listUrls: ['https://thaifly.com/service/hot-deal'],
-    linkRe: '(https?://(?:www\\.)?thaifly\\.com/tour/[A-Za-z0-9-]+|/tour/[A-Za-z0-9-]+)',
-    idRe: /(\d{3,})/,
-    imageRe: /https?:\/\/[^"'\s)]*thaifly\.com\/[^"'\s)]+\.(?:jpg|jpeg|png|webp)/i,
-  },
-  {
-    id: 'mushroom',
-    name: 'มัชรูมทราเวล',
-    listUrls: ['https://www.mushroomtravel.com/tour/promotion'],
-    linkRe: '(https?://(?:www\\.)?mushroomtravel\\.com/tour/[A-Za-z0-9-]+|/tour/[A-Za-z0-9-]+)',
-    idRe: /(\d{3,})/,
-    imageRe: /https?:\/\/[^"'\s)]*mushroomtravel\.com\/[^"'\s)]+\.(?:jpg|jpeg|png|webp)/i,
-  },
-  {
     id: 'thaitravelcenter',
     name: 'ไทยทราเวลเซ็นเตอร์',
     listUrls: ['https://www.thaitravelcenter.com/tour/discounted/'],

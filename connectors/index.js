@@ -5,11 +5,13 @@
 import tourkrub from './tourkrub.js';
 import unithai from './unithai.js';
 import travelzeed from './travelzeed.js';
+import thaifly from './thaifly.js';
+import mushroom from './mushroom.js';
 import { GENERIC_CONNECTORS } from './sources.js';
 import { cleanDeals, flagFor } from '../lib/normalize.js';
 
 // Hand-written parsers + remaining config-driven scaffolds.
-export const CONNECTORS = [tourkrub, unithai, travelzeed, ...GENERIC_CONNECTORS];
+export const CONNECTORS = [tourkrub, unithai, travelzeed, thaifly, mushroom, ...GENERIC_CONNECTORS];
 
 // Fetch every source in parallel. A failing source contributes [] instead of
 // blowing up the whole refresh.
