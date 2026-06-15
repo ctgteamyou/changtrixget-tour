@@ -1,0 +1,23 @@
+# Render Blueprint — deploy ทั้งเว็บด้วยไฟล์เดียว
+# https://render.com/docs/blueprint-spec
+#
+# วิธีใช้: push โปรเจกต์ขึ้น GitHub แล้วไปที่ Render → New → Blueprint → เลือก repo
+# Render จะอ่านไฟล์นี้แล้วตั้งค่า service ให้อัตโนมัติ
+
+services:
+  - type: web
+    name: changtrixget-tour
+    runtime: node
+    plan: free
+    region: singapore        # ใกล้ไทยสุด latency ต่ำ
+    buildCommand: npm install # ไม่มี dependency จริง รันผ่านเร็วมาก
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    autoDeploy: true          # push ขึ้น GitHub แล้ว deploy ใหม่อัตโนมัติ
+    envVars:
+      - key: LIVE
+        value: "1"            # เปิดโหมดดึงดีลจริง
+      - key: REFRESH_MS
+        value: "900000"       # รีเฟรชทุก 15 นาที
+      - key: NODE_VERSION
+        value: "20"
