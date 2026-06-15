@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ทัวร์ไฟไหม้ โปรไฟไหม้ รวมโปรโมชั่นทัวร์ต่างประเทศราคาถูก · changtrixget-tour</title>
+<meta name="description" content="รวมทัวร์ไฟไหม้ โปรไฟไหม้ (ทัวร์ลดราคาใกล้วันเดินทาง) จากหลายเอเจนซีทัวร์ไทยไว้ที่เดียว ค้นหา กรอง และเทียบราคาทัวร์จีน ญี่ปุ่น เกาหลี เวียดนาม โดย changtrixget-tour" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+/* ===== BRAND TOKENS — changtrixget palette (teal #49a7a5 on light) ===== */
+:root{
+  --brand:#49a7a5;          /* primary — ChangTrixGet teal */
+  --brand-2:#2f8a88;        /* darker teal for gradients */
+  --brand-ink:#16302f;
+  --bg:#f3f7f7;             /* page background (light) */
+  --panel:#ffffff;          /* cards / panels */
+  --panel-2:#eef5f5;        /* hover / inputs */
+  --line:#dce8e8;
+  --text:#15302f;
+  --muted:#5f7574;
+  --good:#1e9e6a;
+  --hot:#ff5a3c;            /* coral accent for ไฟไหม้ / discount badges */
+  --radius:16px;
+  --radius-sm:10px;
+  --shadow:0 6px 22px rgba(28,82,80,.12);
+  --font:"Noto Sans Thai",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.5}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer}
+
+/* ===== Header ===== */
+header.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:12px 20px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.3px;white-space:nowrap}
+.brand .mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:20px;background:linear-gradient(135deg,var(--brand),var(--brand-2));box-shadow:0 4px 14px rgba(255,87,34,.45)}
+.brand small{display:block;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.5px}
+.search{flex:1;display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:10px 16px;max-width:560px;margin:0 auto}
+.search input{flex:1;background:none;border:0;outline:0;color:var(--text);font-size:15px}
+.search .ico{opacity:.6}
+.status-pill{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 0 3px rgba(34,197,94,.18)}
+.dot.sample{background:var(--brand-2);box-shadow:0 0 0 3px rgba(255,145,0,.18)}
+
+/* ===== Hero ===== */
+.hero{max-width:1280px;margin:24px auto 8px;padding:0 20px}
+.hero-card{position:relative;overflow:hidden;border-radius:var(--radius);padding:28px;background:radial-gradient(120% 160% at 0% 0%,rgba(73,167,165,.20),transparent 55%),linear-gradient(135deg,#ffffff,#e9f4f3);border:1px solid var(--line)}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--brand-2);text-transform:uppercase;letter-spacing:1px}
+.hero h1{margin:10px 0 8px;font-size:30px;line-height:1.2;letter-spacing:-.5px}
+.hero p{margin:0;color:var(--muted);max-width:680px}
+.hero .stat-row{display:flex;gap:24px;margin-top:18px;flex-wrap:wrap}
+.stat b{font-size:22px}.stat span{display:block;font-size:12px;color:var(--muted)}
+
+/* ===== Layout ===== */
+.wrap{max-width:1280px;margin:18px auto 60px;padding:0 20px;display:grid;grid-template-columns:280px 1fr;gap:22px;align-items:start}
+.filters{position:sticky;top:78px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;max-height:calc(100vh - 96px);overflow:auto}
+.fgroup{padding:14px 0;border-bottom:1px solid var(--line)}
+.fgroup:last-child{border-bottom:0}
+.fgroup h4{margin:0 0 10px;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.fgroup h4 .clear{font-size:11px;color:var(--brand-2);cursor:pointer;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-size:12.5px;padding:6px 11px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line);color:var(--muted)}
+.chip.active{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;border-color:transparent;font-weight:700}
+.facet{display:flex;align-items:center;gap:9px;padding:5px 2px;font-size:13.5px;cursor:pointer;border-radius:8px}
+.facet:hover{background:var(--panel-2)}
+.facet input{accent-color:var(--brand)}
+.facet .cnt{margin-left:auto;font-size:11.5px;color:var(--muted);background:var(--panel-2);padding:1px 7px;border-radius:999px}
+.facet.active .cnt{background:rgba(255,87,34,.18);color:var(--brand-2)}
+.range-val{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:6px}
+input[type=range]{width:100%;accent-color:var(--brand)}
+.morelink{font-size:12px;color:var(--brand-2);cursor:pointer;margin-top:6px;display:inline-block;font-weight:600}
+
+/* ===== Main column ===== */
+.toolbar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.count{font-weight:700}.count span{color:var(--muted);font-weight:400;font-size:13px}
+.views{margin-left:auto;display:flex;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px}
+.views button{border:0;background:none;color:var(--muted);font-size:13px;font-weight:600;padding:7px 14px;border-radius:999px}
+.views button.active{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff}
+.sortsel{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:999px;padding:8px 12px;font-size:13px;font-family:inherit}
+
+/* ===== Cards / list ===== */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:.15s transform,.15s border-color}
+.card:hover{transform:translateY(-3px);border-color:var(--brand);box-shadow:var(--shadow)}
+.thumb{aspect-ratio:16/10;background:linear-gradient(135deg,#e3efef,#cfe3e2);position:relative;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb .ph{position:absolute;inset:0;display:grid;place-items:center;font-size:34px;opacity:.5}
+.badge{position:absolute;top:10px;left:10px;background:var(--hot);color:#fff;font-size:12px;font-weight:800;padding:4px 9px;border-radius:8px;box-shadow:var(--shadow)}
+.srcbadge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);color:#fff;font-size:11px;font-weight:600;padding:4px 8px;border-radius:8px}
+.card-body{padding:13px 14px 15px;display:flex;flex-direction:column;gap:7px;flex:1}
+.route{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.title{font-size:14.5px;font-weight:600;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:40px}
+.meta{font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 10px}
+.dep-soon{color:var(--brand-2);font-weight:700}
+.price{margin-top:auto;display:flex;align-items:baseline;gap:8px}
+.price .now{font-size:20px;font-weight:800;color:var(--brand-2)}
+.price .was{font-size:13px;color:var(--muted);text-decoration:line-through}
+.cta{margin-top:8px;text-align:center;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:9px;font-size:13px;font-weight:700;color:var(--brand-2)}
+.cta:hover{background:rgba(255,87,34,.12)}
+
+/* ===== Calendar ===== */
+.cal{display:flex;flex-direction:column;gap:18px}
+.cal-day{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.cal-head{padding:11px 16px;background:var(--panel-2);font-weight:700;display:flex;align-items:center;gap:10px;font-size:14px}
+.cal-head .n{margin-left:auto;font-size:12px;color:var(--muted);font-weight:500}
+.cal-row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--line);font-size:13.5px}
+.cal-row .flag{font-size:18px}
+.cal-row .ttl{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cal-row .pc{font-weight:800}
+.cal-row .pc s{color:var(--muted);font-weight:400;margin-right:6px;font-size:12px}
+.cal-row .bd{background:var(--hot);color:#fff;font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px}
+
+/* ===== Map ===== */
+.mapwrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:8px;position:relative}
+.mapcanvas{position:relative;width:100%;aspect-ratio:16/10;background:radial-gradient(80% 80% at 70% 25%,rgba(73,167,165,.12),transparent),linear-gradient(180deg,#e8f3f2,#dbeceb);border-radius:12px;overflow:hidden}
+.pin{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;cursor:pointer}
+.pin .bub{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;font-weight:800;font-size:12px;min-width:24px;height:24px;padding:0 7px;border-radius:999px;display:grid;place-items:center;box-shadow:0 4px 12px rgba(255,87,34,.5)}
+.pin .lbl{font-size:11px;color:var(--text);margin-top:3px;background:rgba(255,255,255,.85);box-shadow:0 1px 4px rgba(28,82,80,.18);padding:1px 6px;border-radius:6px;white-space:nowrap}
+.pin:hover{z-index:5}.pin:hover .bub{transform:scale(1.18)}
+
+.empty{padding:60px 20px;text-align:center;color:var(--muted)}
+.loadmore{display:block;margin:26px auto 0;background:var(--panel);border:1px solid var(--line);color:var(--text);font-weight:700;padding:12px 28px;border-radius:999px}
+.skeleton{background:linear-gradient(90deg,#eef5f5,#e1eeed,#eef5f5);background-size:200% 100%;animation:sk 1.2s infinite}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+footer.foot{border-top:1px solid var(--line);background:var(--panel);margin-top:40px}
+.foot-inner{max-width:1280px;margin:0 auto;padding:26px 20px;color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between}
+.foot a{color:var(--brand-2)}
+
+.mobile-filter-btn{display:none}
+@media(max-width:880px){
+  .wrap{grid-template-columns:1fr}
+  .filters{position:fixed;inset:0;z-index:40;border-radius:0;max-height:100vh;display:none}
+  .filters.open{display:block}
+  .mobile-filter-btn{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;border:0;border-radius:999px;padding:9px 16px;font-weight:700;font-size:13px}
+  .filters .closebtn{display:block}
+}
+.filters .closebtn{display:none;width:100%;margin-top:12px;background:var(--brand);color:#fff;border:0;border-radius:10px;padding:11px;font-weight:700}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <a class="brand" href="/">
+      <span class="mark">🔥</span>
+      <span>ChangTrixGet<small>ทัวร์ไฟไหม้ · โปรไฟไหม้</small></span>
+    </a>
+    <label class="search">
+      <span class="ico">🔍</span>
+      <input id="q" type="search" placeholder="ค้นหาด้วยชื่อทัวร์ ประเทศ เมือง หรือสายการบิน…" autocomplete="off" />
+    </label>
+    <div class="status-pill"><span class="dot" id="statusDot"></span><span id="statusText">กำลังโหลด…</span></div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-card">
+    <span class="kicker">🔥 ล่าดีลนาทีสุดท้าย</span>
+    <h1>ทัวร์ไฟไหม้ โปรไฟไหม้ ราคาลดกระหน่ำ รวมไว้ที่เดียว</h1>
+    <p>changtrixget-tour รวบรวมทัวร์ต่างประเทศใกล้วันเดินทางจากหลายเอเจนซีไทย คัดเฉพาะที่ลดราคาแรง เทียบราคา วันเดินทาง และส่วนลดได้ในที่เดียว แล้วจองตรงกับผู้ขาย</p>
+    <div class="stat-row">
+      <div class="stat"><b id="sTotal">—</b><span>ดีลทั้งหมด</span></div>
+      <div class="stat"><b id="sMax">—</b><span>ส่วนลดสูงสุด</span></div>
+      <div class="stat"><b id="sMin">—</b><span>เริ่มต้นเพียง</span></div>
+      <div class="stat"><b id="sSrc">—</b><span>แหล่งข้อมูล</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <aside class="filters" id="filters"></aside>
+  <main>
+    <div class="toolbar">
+      <div class="count"><span id="resultCount">—</span></div>
+      <button class="mobile-filter-btn" onclick="document.getElementById('filters').classList.add('open')">⚙️ ตัวกรอง</button>
+      <select class="sortsel" id="sort">
+        <option value="price">เรียง: ราคาถูกสุด</option>
+        <option value="discount">เรียง: ลดเยอะสุด</option>
+        <option value="depart">เรียง: ใกล้เดินทางสุด</option>
+      </select>
+      <div class="views">
+        <button data-view="list" class="active">รายการ</button>
+        <button data-view="calendar">ปฏิทิน</button>
+        <button data-view="map">แผนที่</button>
+      </div>
+    </div>
+    <div id="content"><div class="grid" id="grid"></div></div>
+  </main>
+</div>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>🔥 <b>changtrixget-tour</b> · เว็บรวมดีลทัวร์ไฟไหม้ ไม่ใช่ผู้ให้บริการทัวร์โดยตรง · ราคาและที่นั่งอาจเปลี่ยนแปลง โปรดตรวจสอบกับผู้ขายก่อนจอง</div>
+    <div>© 2026 changtrixget-tour</div>
+  </div>
+</footer>
+
+<script type="module">
+const CITY_COORDS = {
+  "ฉงชิ่ง":[29.563,106.551],"เฉิงตู":[30.572,104.066],"อู่หลง":[29.323,107.76],
+  "เซี่ยงไฮ้":[31.230,121.473],"ปักกิ่ง":[39.904,116.407],"จางเจียเจี้ย":[29.117,110.479],
+  "ชิงเต่า":[36.067,120.382],"คุนหมิง":[25.045,102.710],"ต้าหลี่":[25.606,100.267],
+  "ลี่เจียง":[26.855,100.227],"กวางเจา":[23.129,113.264],"จูไห่":[22.271,113.577],
+  "หางโจว":[30.274,120.155],"มองโกเลียใน":[40.842,111.749],"เออร์ดอส":[39.609,109.781],
+  "โซล":[37.566,126.978],"ปูซาน":[35.179,129.075],"โตเกียว":[35.689,139.692],
+  "โอซาก้า":[34.694,135.502],"ดานัง":[16.054,108.202],"ฮอยอัน":[15.880,108.338],
+  "ฟูก๊วก":[10.227,103.964],"ฮานอย":[21.028,105.804],"ไทเป":[25.033,121.565],
+  "ฮ่องกง":[22.319,114.169],"มาเก๊า":[22.199,113.544],"สิงคโปร์":[1.352,103.820]
+};
+const FLAG = {"จีน":"🇨🇳","เกาหลี":"🇰🇷","ญี่ปุ่น":"🇯🇵","เวียดนาม":"🇻🇳","ไต้หวัน":"🇹🇼","ฮ่องกง":"🇭🇰","มาเก๊า":"🇲🇴","สิงคโปร์":"🇸🇬","มาเลเซีย":"🇲🇾","ลาว":"🇱🇦","พม่า":"🇲🇲"};
+const baht = n => n==null ? "—" : "฿"+n.toLocaleString("en-US");
+const TODAY = new Date(); TODAY.setHours(0,0,0,0);
+const daysUntil = d => d==null ? null : Math.round((new Date(d+"T00:00:00")-TODAY)/86400000);
+const THMON = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+function thDate(d){ if(!d) return ""; const x=new Date(d+"T00:00:00"); return `${x.getDate()} ${THMON[x.getMonth()]} ${x.getFullYear()+543}`; }
+
+const state = {
+  all:[], q:"", departWithin:0, minDiscount:0,
+  maxPrice:90000, maxDuration:15,
+  countries:new Set(), cities:new Set(), airlines:new Set(), sources:new Set(),
+  sort:"price", view:"list", shown:24,
+  showAllCountries:false, showAllCities:false, showAllAirlines:false
+};
+
+async function boot(){
+  let payload;
+  try{ payload = await (await fetch("/api/deals")).json(); }
+  catch(e){ payload = {deals:[],mode:"error",sources:{}}; }
+  state.all = payload.deals||[];
+  // status
+  const dot=document.getElementById("statusDot"), txt=document.getElementById("statusText");
+  if(payload.mode==="live"){ dot.className="dot"; txt.textContent="อัปเดตสด · เมื่อสักครู่"; }
+  else if(payload.mode==="sample"){ dot.className="dot sample"; txt.textContent="โหมดตัวอย่าง (ออฟไลน์)"; }
+  else { dot.className="dot sample"; txt.textContent="โหลดข้อมูลไม่สำเร็จ"; }
+  // hero stats
+  const prices=state.all.map(d=>d.priceSale).filter(Boolean);
+  document.getElementById("sTotal").textContent=state.all.length.toLocaleString();
+  document.getElementById("sMax").textContent=(state.all.reduce((m,d)=>Math.max(m,d.discountPct||0),0))+"%";
+  document.getElementById("sMin").textContent=baht(prices.length?Math.min(...prices):null);
+  document.getElementById("sSrc").textContent=new Set(state.all.map(d=>d.sourceName)).size;
+  bindUI(); render();
+}
+
+function passesExceptFacet(d, skip){
+  if(state.q){ const h=(d.title+" "+(d.country||"")+" "+(d.city||"")+" "+(d.airline||"")+" "+d.sourceName).toLowerCase(); if(!h.includes(state.q)) return false; }
+  if(skip!=="depart" && state.departWithin){ const du=daysUntil(d.departDate); if(du==null||du<0||du>state.departWithin) return false; }
+  if(skip!=="discount" && state.minDiscount && (d.discountPct||0)<state.minDiscount) return false;
+  if(skip!=="price" && d.priceSale!=null && d.priceSale>state.maxPrice) return false;
+  if(skip!=="duration" && d.durationDays!=null && d.durationDays>state.maxDuration) return false;
+  if(skip!=="country" && state.countries.size && !state.countries.has(d.country)) return false;
+  if(skip!=="city" && state.cities.size && !state.cities.has(d.city)) return false;
+  if(skip!=="airline" && state.airlines.size && !state.airlines.has(d.airline)) return false;
+  if(skip!=="source" && state.sources.size && !state.sources.has(d.source)) return false;
+  return true;
+}
+const filtered = () => state.all.filter(d=>passesExceptFacet(d,null));
+function counts(key, field){
+  const m=new Map();
+  for(const d of state.all){ if(!passesExceptFacet(d,key)) continue; const v=d[field]; if(v==null) continue; m.set(v,(m.get(v)||0)+1); }
+  return [...m.entries()].sort((a,b)=>b[1]-a[1]);
+}
+
+function bindUI(){
+  document.getElementById("q").addEventListener("input",e=>{ state.q=e.target.value.trim().toLowerCase(); state.shown=24; render(); });
+  document.getElementById("sort").addEventListener("change",e=>{ state.sort=e.target.value; render(); });
+  document.querySelectorAll(".views button").forEach(b=>b.addEventListener("click",()=>{
+    document.querySelectorAll(".views button").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active"); state.view=b.dataset.view; render();
+  }));
+}
+
+function chip(label,active,on){ const b=document.createElement("button"); b.className="chip"+(active?" active":""); b.textContent=label; b.onclick=on; return b; }
+function facetRow(label,count,active,on,flag){
+  const r=document.createElement("label"); r.className="facet"+(active?" active":"");
+  r.innerHTML=`<input type="checkbox" ${active?"checked":""}/>${flag?`<span>${flag}</span>`:""}<span>${label}</span><span class="cnt">${count}</span>`;
+  r.querySelector("input").onchange=on; return r;
+}
+
+function renderFilters(){
+  const F=document.getElementById("filters"); F.innerHTML="";
+  const mk=(title,clearFn,showClear)=>{ const g=document.createElement("div"); g.className="fgroup";
+    const h=document.createElement("h4"); h.innerHTML=`<span>${title}</span>`;
+    if(showClear){ const c=document.createElement("span"); c.className="clear"; c.textContent="ล้าง"; c.onclick=clearFn; h.appendChild(c);} g.appendChild(h); return g; };
+
+  // depart within
+  let g=mk("ออกเดินทางภายใน",()=>{state.departWithin=0;render();},state.departWithin>0);
+  const dc=document.createElement("div"); dc.className="chips";
+  [["ทั้งหมด",0],["วันนี้",0.5],["≤ 3 วัน",3],["≤ 7 วัน",7],["≤ 14 วัน",14]].forEach(([l,v])=>{
+    dc.appendChild(chip(l, state.departWithin===v || (v===0&&!state.departWithin), ()=>{state.departWithin=v;state.shown=24;render();}));
+  }); g.appendChild(dc); F.appendChild(g);
+
+  // discount
+  g=mk("ส่วนลด",()=>{state.minDiscount=0;render();},state.minDiscount>0);
+  const sc=document.createElement("div"); sc.className="chips";
+  [["ทั้งหมด",0],["≥10%",10],["≥20%",20],["≥30%",30],["≥40%",40],["≥50%",50]].forEach(([l,v])=>{
+    sc.appendChild(chip(l, state.minDiscount===v||(v===0&&!state.minDiscount), ()=>{state.minDiscount=v;state.shown=24;render();}));
+  }); g.appendChild(sc); F.appendChild(g);
+
+  // price
+  g=mk("ช่วงราคา (สูงสุด)",()=>{state.maxPrice=90000;render();},state.maxPrice<90000);
+  const pv=document.createElement("div"); pv.className="range-val"; pv.innerHTML=`<span>฿5,000</span><span>${state.maxPrice>=90000?"฿90,000+":baht(state.maxPrice)}</span>`;
+  const pr=document.createElement("input"); pr.type="range"; pr.min=5000; pr.max=90000; pr.step=1000; pr.value=state.maxPrice;
+  pr.oninput=e=>{state.maxPrice=+e.target.value; pv.lastElementChild.textContent=state.maxPrice>=90000?"฿90,000+":baht(state.maxPrice); render();};
+  g.appendChild(pv); g.appendChild(pr); F.appendChild(g);
+
+  // duration
+  g=mk("ระยะเวลาเดินทาง (สูงสุด)",()=>{state.maxDuration=15;render();},state.maxDuration<15);
+  const dv=document.createElement("div"); dv.className="range-val"; dv.innerHTML=`<span>1 วัน</span><span>${state.maxDuration>=15?"14 วัน+":state.maxDuration+" วัน"}</span>`;
+  const dr=document.createElement("input"); dr.type="range"; dr.min=1; dr.max=15; dr.step=1; dr.value=state.maxDuration;
+  dr.oninput=e=>{state.maxDuration=+e.target.value; dv.lastElementChild.textContent=state.maxDuration>=15?"14 วัน+":state.maxDuration+" วัน"; render();};
+  g.appendChild(dv); g.appendChild(dr); F.appendChild(g);
+
+  // country
+  g=mk("ประเทศ",()=>{state.countries.clear();render();},state.countries.size>0);
+  const cc=counts("country","country");
+  (state.showAllCountries?cc:cc.slice(0,6)).forEach(([v,n])=>g.appendChild(facetRow(v,n,state.countries.has(v),()=>{toggle(state.countries,v);},FLAG[v]||"🏳️")));
+  if(cc.length>6){ const m=document.createElement("span"); m.className="morelink"; m.textContent=state.showAllCountries?"ย่อ":`ดูทั้งหมด (${cc.length})`; m.onclick=()=>{state.showAllCountries=!state.showAllCountries;renderFilters();}; g.appendChild(m);} F.appendChild(g);
+
+  // city
+  g=mk("เมือง",()=>{state.cities.clear();render();},state.cities.size>0);
+  const ci=counts("city","city");
+  (state.showAllCities?ci:ci.slice(0,6)).forEach(([v,n])=>g.appendChild(facetRow(v,n,state.cities.has(v),()=>{toggle(state.cities,v);})));
+  if(ci.length>6){ const m=document.createElement("span"); m.className="morelink"; m.textContent=state.showAllCities?"ย่อ":`ดูทั้งหมด (${ci.length})`; m.onclick=()=>{state.showAllCities=!state.showAllCities;renderFilters();}; g.appendChild(m);} F.appendChild(g);
+
+  // airline
+  g=mk("สายการบิน",()=>{state.airlines.clear();render();},state.airlines.size>0);
+  const ai=counts("airline","airline");
+  (state.showAllAirlines?ai:ai.slice(0,6)).forEach(([v,n])=>g.appendChild(facetRow(v,n,state.airlines.has(v),()=>{toggle(state.airlines,v);})));
+  if(ai.length>6){ const m=document.createElement("span"); m.className="morelink"; m.textContent=state.showAllAirlines?"ย่อ":`ดูทั้งหมด (${ai.length})`; m.onclick=()=>{state.showAllAirlines=!state.showAllAirlines;renderFilters();}; g.appendChild(m);} F.appendChild(g);
+
+  // source
+  g=mk("แหล่งข้อมูล",()=>{state.sources.clear();render();},state.sources.size>0);
+  const srcMap=new Map(); for(const d of state.all){ if(!passesExceptFacet(d,"source")) continue; srcMap.set(d.source,{name:d.sourceName,n:(srcMap.get(d.source)?.n||0)+1}); }
+  [...srcMap.entries()].sort((a,b)=>b[1].n-a[1].n).forEach(([k,v])=>g.appendChild(facetRow(v.name,v.n,state.sources.has(k),()=>{toggle(state.sources,k);})));
+  F.appendChild(g);
+
+  const cb=document.createElement("button"); cb.className="closebtn"; cb.textContent="ดูผลลัพธ์"; cb.onclick=()=>F.classList.remove("open"); F.appendChild(cb);
+}
+function toggle(set,v){ set.has(v)?set.delete(v):set.add(v); state.shown=24; render(); }
+
+function sortDeals(arr){
+  const a=[...arr];
+  if(state.sort==="price") a.sort((x,y)=>(x.priceSale||1e9)-(y.priceSale||1e9));
+  else if(state.sort==="discount") a.sort((x,y)=>(y.discountPct||0)-(x.discountPct||0));
+  else if(state.sort==="depart") a.sort((x,y)=>(daysUntil(x.departDate)??1e9)-(daysUntil(y.departDate)??1e9));
+  return a;
+}
+
+function cardEl(d){
+  const el=document.createElement("article"); el.className="card";
+  const du=daysUntil(d.departDate);
+  const depTxt = du==null?"":(du<=0?"ออกวันนี้":du===1?"ออกพรุ่งนี้":`ออกใน ${du} วัน`);
+  el.innerHTML=`
+    <a class="thumb" href="${d.url}" target="_blank" rel="noopener">
+      ${d.image?`<img loading="lazy" src="${d.image}" alt="${d.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">`:""}
+      <div class="ph" ${d.image?'style="display:none"':""}>${FLAG[d.country]||"🧳"}</div>
+      ${d.discountPct?`<span class="badge">ลด ${d.discountPct}%</span>`:""}
+      <span class="srcbadge">${d.sourceName}</span>
+    </a>
+    <div class="card-body">
+      <div class="route">${FLAG[d.country]||"🏳️"} ${d.country||""}${d.city?" · "+d.city:""}</div>
+      <div class="title">${d.title}</div>
+      <div class="meta">
+        ${d.durationDays?`<span>🗓️ ${d.durationDays} วัน</span>`:""}
+        ${d.departDate?`<span class="${du!=null&&du<=3?"dep-soon":""}">✈️ ${thDate(d.departDate)}${depTxt?" · "+depTxt:""}</span>`:""}
+        ${d.airline?`<span>🛫 ${d.airline}</span>`:""}
+      </div>
+      <div class="price"><span class="now">${baht(d.priceSale)}</span>${d.priceOriginal&&d.priceOriginal>d.priceSale?`<span class="was">${baht(d.priceOriginal)}</span>`:""}</div>
+      <a class="cta" href="${d.url}" target="_blank" rel="noopener">ดูรายละเอียด / จอง →</a>
+    </div>`;
+  return el;
+}
+
+function renderList(list){
+  const c=document.getElementById("content");
+  if(!list.length){ c.innerHTML='<div class="empty">😶 ไม่พบดีลที่ตรงกับตัวกรอง ลองล้างตัวกรองดูนะ</div>'; return; }
+  const grid=document.createElement("div"); grid.className="grid";
+  list.slice(0,state.shown).forEach(d=>grid.appendChild(cardEl(d)));
+  c.innerHTML=""; c.appendChild(grid);
+  if(list.length>state.shown){ const b=document.createElement("button"); b.className="loadmore"; b.textContent=`โหลดเพิ่ม (${list.length-state.shown} ดีล)`; b.onclick=()=>{state.shown+=24;renderList(list);}; c.appendChild(b); }
+}
+
+function renderCalendar(list){
+  const c=document.getElementById("content");
+  const groups=new Map();
+  for(const d of list){ const k=d.departDate||"ไม่ระบุวันเดินทาง"; if(!groups.has(k)) groups.set(k,[]); groups.get(k).push(d); }
+  const keys=[...groups.keys()].sort((a,b)=> (a==="ไม่ระบุวันเดินทาง")-(b==="ไม่ระบุวันเดินทาง") || a.localeCompare(b));
+  if(!keys.length){ c.innerHTML='<div class="empty">😶 ไม่พบดีล</div>'; return; }
+  const wrap=document.createElement("div"); wrap.className="cal";
+  for(const k of keys){
+    const day=document.createElement("div"); day.className="cal-day";
+    const du=k==="ไม่ระบุวันเดินทาง"?null:daysUntil(k);
+    const label = k==="ไม่ระบุวันเดินทาง"?k:`${thDate(k)} ${du!=null&&du<=0?"· ออกวันนี้":du===1?"· พรุ่งนี้":du!=null?`· อีก ${du} วัน`:""}`;
+    day.innerHTML=`<div class="cal-head">📅 ${label}<span class="n">${groups.get(k).length} ดีล</span></div>`;
+    sortDeals(groups.get(k)).forEach(d=>{
+      const r=document.createElement("a"); r.className="cal-row"; r.href=d.url; r.target="_blank"; r.rel="noopener";
+      r.innerHTML=`<span class="flag">${FLAG[d.country]||"🏳️"}</span><span class="ttl">${d.title}</span>${d.discountPct?`<span class="bd">-${d.discountPct}%</span>`:""}<span class="pc">${d.priceOriginal&&d.priceOriginal>d.priceSale?`<s>${baht(d.priceOriginal)}</s>`:""}${baht(d.priceSale)}</span>`;
+      day.appendChild(r);
+    });
+    wrap.appendChild(day);
+  }
+  c.innerHTML=""; c.appendChild(wrap);
+}
+
+function renderMap(list){
+  const c=document.getElementById("content");
+  const byCity=new Map();
+  for(const d of list){ if(!d.city||!CITY_COORDS[d.city]) continue; if(!byCity.has(d.city)) byCity.set(d.city,[]); byCity.get(d.city).push(d); }
+  // bounding box across SE/E Asia
+  const LAT=[0,45], LNG=[95,145];
+  const wrap=document.createElement("div"); wrap.className="mapwrap";
+  const canvas=document.createElement("div"); canvas.className="mapcanvas";
+  if(!byCity.size){ canvas.innerHTML='<div class="empty">🗺️ ไม่มีเมืองที่พิกัดสำหรับดีลชุดนี้</div>'; }
+  for(const [city,deals] of byCity){
+    const [lat,lng]=CITY_COORDS[city];
+    const x=((lng-LNG[0])/(LNG[1]-LNG[0]))*100;
+    const y=(1-(lat-LAT[0])/(LAT[1]-LAT[0]))*100;
+    const min=Math.min(...deals.map(d=>d.priceSale||1e9));
+    const pin=document.createElement("a"); pin.className="pin"; pin.style.left=x+"%"; pin.style.top=y+"%";
+    pin.href=deals[0].url; pin.target="_blank"; pin.rel="noopener";
+    pin.innerHTML=`<span class="bub">${deals.length}</span><span class="lbl">${city} · ${baht(min)}</span>`;
+    canvas.appendChild(pin);
+  }
+  wrap.appendChild(canvas);
+  c.innerHTML=""; c.appendChild(wrap);
+}
+
+function render(){
+  renderFilters();
+  const list=sortDeals(filtered());
+  document.getElementById("resultCount").innerHTML=`${list.length.toLocaleString()} ดีล <span>· อัปเดตล่าสุด</span>`;
+  if(state.view==="list") renderList(list);
+  else if(state.view==="calendar") renderCalendar(list);
+  else renderMap(list);
+}
+
+boot();
+</script>
+</body>
+</html>
