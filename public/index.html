@@ -314,11 +314,13 @@ function renderFilters(){
   dr.oninput=e=>{state.maxDuration=+e.target.value; dv.lastElementChild.textContent=state.maxDuration>=15?"14 วัน+":state.maxDuration+" วัน"; render();};
   g.appendChild(dv); g.appendChild(dr); F.appendChild(g);
 
-  // country
+  // country — always show all 6 destinations we cover, even when count is 0
   g=mk("ประเทศ",()=>{state.countries.clear();render();},state.countries.size>0);
-  const cc=counts("country","country");
-  (state.showAllCountries?cc:cc.slice(0,6)).forEach(([v,n])=>g.appendChild(facetRow(v,n,state.countries.has(v),()=>{toggle(state.countries,v);},FLAG[v]||"🏳️")));
-  if(cc.length>6){ const m=document.createElement("span"); m.className="morelink"; m.textContent=state.showAllCountries?"ย่อ":`ดูทั้งหมด (${cc.length})`; m.onclick=()=>{state.showAllCountries=!state.showAllCountries;renderFilters();}; g.appendChild(m);} F.appendChild(g);
+  const ALLOWED_C=["จีน","เกาหลี","ญี่ปุ่น","เวียดนาม","ไต้หวัน","ฮ่องกง"];
+  const ccMap=new Map(counts("country","country"));
+  const cc=ALLOWED_C.map(v=>[v, ccMap.get(v)||0]).sort((a,b)=>b[1]-a[1]);
+  cc.forEach(([v,n])=>g.appendChild(facetRow(v,n,state.countries.has(v),()=>{toggle(state.countries,v);},FLAG[v]||"🏳️")));
+  F.appendChild(g);
 
   // city
   g=mk("เมือง",()=>{state.cities.clear();render();},state.cities.size>0);
